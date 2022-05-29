@@ -1,0 +1,1 @@
+{"buildTargets":["all","build","clean","dep","gen","help","init","install","lint","linux","pb","run","test","test-coverage","vet"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}
