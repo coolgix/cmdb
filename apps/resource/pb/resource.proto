@@ -68,16 +68,17 @@ message SearchRequest {
   // 关键字参数
   // @gotags: json:"keywords"
   string keywords = 14;
-  // 是否精确匹配，比如匹配ip
+  // 是否精确匹配，比如匹配ip，10.0.1.1 10.10.1.1xxx
   // @gotags: json:"exact_match"
   bool exact_match = 15;
 
 }
 
 
+
 message ResourceSet {
   // @gotags: json:"total"
-  int64 total =1；
+  int64 total =1;
   // @gotags: json:"items"
   repeated Resource items =2;
 
@@ -85,14 +86,30 @@ message ResourceSet {
 
 //请求tag的参数
 message QueryTagRequest {
-
+  // 资源id
+  // @gotags: json:"resource_ids"
+  repeated string resource_ids = 1;
 }
 
-
+//定义枚举，控制是添加一个标签还是删除一个标签
+enum UpdateAction {
+  // 添加
+  ADD = 0;
+  // 移除
+  REMOVE = 1;
+}
 
 //更新我们的标签
 message UpdateTagRequest {
-
+  // 资源id,修改哪一个资源的标签
+  // @gotags: json:"id" validate:"required"
+  string id = 1;
+  // 资源id，具体标签的对象
+  // @gotags: json:"action"
+  UpdateAction action = 2;
+  // 需要添加的资源标签，
+  // @gotags: json:"tags" validate:"required"
+  repeated Tag tags = 3;
 }
 
 //资源的描述信息
@@ -108,6 +125,29 @@ message Resource {
   ReleasePlan release_plan = 3;
 
 }
+
+// 资源释放计划
+message ReleasePlan {
+  // 释放原因
+  // @gotags: json:"reason"
+  string reason = 1;
+  // 是否立即释放
+  // @gotags: json:"immediately"
+  bool immediately = 2;
+  // 计划时间
+  // @gotags: json:"plan_at"
+  int64 plan_at = 3;
+  // 执行时间
+  // @gotags: json:"exec_at"
+  int64 exec_at = 4;
+  // 释放前 提前几天通知, 过期后 云商会自动释放的也需要提前通知
+  // @gotags: json:"notice_before_days"
+  int64 notice_before_days = 5;
+  // 资源释放后, 什么时候销毁该数据
+  // @gotags: json:"destory_at"
+  int64 destory_at = 6;
+}
+
 
 //定义厂商,使用枚举定义
 enum Vendor {
