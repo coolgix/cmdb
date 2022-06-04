@@ -1,6 +1,6 @@
 make --dry-run --always-make --keep-going --print-directory
 make: Entering directory `/Users/yanghaipeng/Desktop/go/src/cmdb'
 go mod tidy
-go build -a -o dist/ -ldflags "-s -w" -ldflags "-X '""github.com/coolgix/cmdb"/version".GIT_BRANCH=master' -X '""github.com/coolgix/cmdb"/version".GIT_COMMIT=67645e55502e0dd89f13d97dab8d19a41f6f713a' -X '""github.com/coolgix/cmdb"/version".BUILD_TIME=2022-05-29 18:21:26' -X '""github.com/coolgix/cmdb"/version".GO_VERSION=go1.18.2 darwin/arm64'" 
+go build -a -o dist/ -ldflags "-s -w" -ldflags "-X '""github.com/coolgix/cmdb"/version".GIT_BRANCH=master' -X '""github.com/coolgix/cmdb"/version".GIT_COMMIT=74fe7ed03ce969cef4f4d876891275eb93ac0a43' -X '""github.com/coolgix/cmdb"/version".BUILD_TIME=2022-06-04 17:10:30' -X '""github.com/coolgix/cmdb"/version".GO_VERSION=go1.18.2 darwin/arm64'" 
 make: Leaving directory `/Users/yanghaipeng/Desktop/go/src/cmdb'
  

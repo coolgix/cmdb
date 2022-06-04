@@ -8,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This program built for i386-apple-darwin11.3.0
  
 
-# Make data base, printed on Sun May 29 18:21:26 2022
+# Make data base, printed on Sat Jun  4 17:10:30 2022
 
 # Variables
 
@@ -35,6 +35,7 @@ VSCODE_NLS_CONFIG = {"locale":"zh-cn","availableLanguages":{"*":"zh-cn"},"_langu
 # environment
 _ = /usr/bin/make
 # makefile (from `Makefile', line 4)
+ 
 IMAGE_PREFIX := "github.com/coolgix/cmdb"
 # makefile (from `Makefile', line 1)
 MAKEFILE_LIST :=  Makefile
@@ -47,11 +48,11 @@ __CFBundleIdentifier = com.microsoft.VSCode
 # environment
 INFOPATH = /opt/homebrew/share/info:
 # makefile (from `Makefile', line 11)
-MCUBE_VERSION := v1.8.12
+MCUBE_VERSION := v1.8.13
 # makefile (from `Makefile', line 15)
-BUILD_COMMIT := 67645e55502e0dd89f13d97dab8d19a41f6f713a
+BUILD_COMMIT := 74fe7ed03ce969cef4f4d876891275eb93ac0a43
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/4x/r01f3jzx2q39025s6f75srrc0000gn/T/vscode-ipc-4831b3c9-a012-416d-9b7d-e0f14a79fb66.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/4x/r01f3jzx2q39025s6f75srrc0000gn/T/vscode-ipc-2082ef7b-e74f-4c22-b310-e832d041c8f0.sock
 # environment
 VSCODE_CWD = /
 # environment
@@ -63,7 +64,7 @@ LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
 GOPATH = /Users/yanghaipeng/go
 # makefile (from `Makefile', line 7)
-PKG_LIST := github.com/coolgix/cmdb github.com/coolgix/cmdb/apps/all github.com/coolgix/cmdb/apps/book github.com/coolgix/cmdb/apps/book/api github.com/coolgix/cmdb/apps/book/impl github.com/coolgix/cmdb/client github.com/coolgix/cmdb/cmd github.com/coolgix/cmdb/conf github.com/coolgix/cmdb/protocol github.com/coolgix/cmdb/swagger github.com/coolgix/cmdb/version
+PKG_LIST := github.com/coolgix/cmdb github.com/coolgix/cmdb/apps/all github.com/coolgix/cmdb/apps/book github.com/coolgix/cmdb/apps/book/api github.com/coolgix/cmdb/apps/book/impl github.com/coolgix/cmdb/apps/resource github.com/coolgix/cmdb/client github.com/coolgix/cmdb/cmd github.com/coolgix/cmdb/conf github.com/coolgix/cmdb/protocol github.com/coolgix/cmdb/swagger github.com/coolgix/cmdb/version
 # environment
 VSCODE_LOG_STACK = false
 # environment
@@ -73,7 +74,7 @@ JAVA_8_HOME = /usr/libexec/java_home
 # default
 .FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.ZhKRqqiecO/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.VLa3MMxwbT/Listeners
 # automatic
 %F = $(notdir $%)
 # environment
@@ -141,7 +142,7 @@ TMPDIR = /var/folders/4x/r01f3jzx2q39025s6f75srrc0000gn/T/
 # environment
 VSCODE_IPC_HOOK = /Users/yanghaipeng/Library/Application Support/Code/1.67.2-main.sock
 # makefile (from `Makefile', line 16)
-BUILD_TIME := 2022-05-29 18:21:26
+BUILD_TIME := 2022-06-04 17:10:30
 # makefile
 MAKEFLAGS = Rrqp
 # environment
@@ -179,13 +180,13 @@ LC_ALL = C
 # makefile (from `Makefile', line 10)
 MCUBE_MODULE := "github.com/infraboard/mcube"
 # makefile (from `Makefile', line 12)
-MCUBE_PKG_PATH := /Users/yanghaipeng/go/pkg/mod/"github.com/infraboard/mcube"@v1.8.12
+MCUBE_PKG_PATH := /Users/yanghaipeng/go/pkg/mod/"github.com/infraboard/mcube"@v1.8.13
 # default
 SUFFIXES := 
 # default
 .INCLUDE_DIRS = /usr/local/include
 # makefile (from `Makefile', line 8)
-GO_FILES := ./cmd/start.go ./cmd/init.go ./cmd/root.go ./swagger/docs.go ./protocol/grpc.go ./protocol/http.go ./version/version.go ./conf/log.go ./conf/config.go ./conf/load.go ./apps/all/internal.go ./apps/all/api.go ./apps/all/impl.go ./apps/book/impl/book.go ./apps/book/impl/dao.go ./apps/book/impl/impl.go ./apps/book/impl/sql.go ./apps/book/book.pb.go ./apps/book/book_grpc.pb.go ./apps/book/app.go ./apps/book/api/book.go ./apps/book/api/http.go ./client/config.go ./client/client.go ./main.go
+GO_FILES := ./cmd/start.go ./cmd/init.go ./cmd/root.go ./swagger/docs.go ./protocol/grpc.go ./protocol/http.go ./version/version.go ./conf/log.go ./conf/config.go ./conf/load.go ./apps/all/internal.go ./apps/all/api.go ./apps/all/impl.go ./apps/book/impl/book.go ./apps/book/impl/dao.go ./apps/book/impl/impl.go ./apps/book/impl/sql.go ./apps/book/book.pb.go ./apps/book/book_grpc.pb.go ./apps/book/app.go ./apps/book/api/book.go ./apps/book/api/http.go ./apps/resource/app.go ./client/config.go ./client/client.go ./main.go
 # environment
 MAKELEVEL := 0
 # environment
@@ -193,7 +194,7 @@ LANG = C
 # makefile (from `Makefile', line 14)
 BUILD_BRANCH := master
 # environment
-VSCODE_PID = 82816
+VSCODE_PID = 66402
 # variable set hash-table stats:
 # Load=91/1024=9%, Rehash=0, Collisions=2/139=1%
 
@@ -203,9 +204,9 @@ VSCODE_PID = 82816
 
 # Directories
 
-# . (device 16777231, inode 67267288): 22 files, no impossibilities.
+# . (device 16777232, inode 67267288): 23 files, no impossibilities.
 
-# 22 files, no impossibilities in 1 directories.
+# 23 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -259,7 +260,6 @@ test:
 #  File does not exist.
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 34):
- 
 	@go test -short ${PKG_LIST}
 	
 
@@ -311,6 +311,7 @@ build: dep
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/2=0%
+ 
 #  commands to execute (from `Makefile', line 41):
 	@go build -a -o dist/${OUTPUT_NAME} -ldflags "-s -w" -ldflags "-X '${VERSION_PATH}.GIT_BRANCH=${BUILD_BRANCH}' -X '${VERSION_PATH}.GIT_COMMIT=${BUILD_COMMIT}' -X '${VERSION_PATH}.BUILD_TIME=${BUILD_TIME}' -X '${VERSION_PATH}.GO_VERSION=${BUILD_GO_VERSION}'" ${MAIN_FILE}
 	
@@ -415,6 +416,6 @@ install:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Sun May 29 18:21:27 2022
+# Finished Make data base on Sat Jun  4 17:10:30 2022
 
  

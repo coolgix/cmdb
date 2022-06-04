@@ -13,7 +13,7 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/imdario/mergo v0.3.13
 	github.com/infraboard/keyauth v0.7.9
-	github.com/infraboard/mcube v1.8.12
+	github.com/infraboard/mcube v1.8.13
 	github.com/rs/xid v1.4.0
 	github.com/spf13/cobra v1.4.0
 	github.com/stretchr/testify v1.7.1
