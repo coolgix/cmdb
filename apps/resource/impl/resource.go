@@ -108,14 +108,14 @@ func (s *service) buildQuery(builder *sqlbuilder.Builder, req *resource.SearchRe
 		//app_count>1
 		//在app定义这个场景的问题
 
-		//for i := range  selector.Values {
-		//	//tag_value LIKe ?
-		//
-		//}
-		//condtions :=[]string()
-		//args :=interface{}{}
-		//for
-		//selector.Values
+		//tag_value LIKe ? or tag_value LIKe ?
+		var condtions []string
+		for _, v := range selector.Values {
+			//=,!=,=~,!~ 四种操作的统配
+			//t.t_value [=,!=,=~,!~] value //这样一种表达式
+			condtions = append(condtions, fmt.Sprintf("t.t_value % ?", selector.Operator))
+
+		}
 	}
 
 }
