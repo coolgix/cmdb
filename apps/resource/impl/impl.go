@@ -13,27 +13,26 @@ import (
 	"github.com/infraboard/mcube/app"
 
 	"google.golang.org/grpc"
-
 )
 
 //接口实现的类
 
-var {
+var (
 	// service 服务实例
 
-	svr = & service{}
-}
+	svr = &service{}
+)
 
 //依赖于一个db，logger，
 type service struct {
-	db *sql.DB
+	db  *sql.DB
 	log logger.Logger
 
 	resource.UnimplementedServiceServer //作为一个grpc的服务实现嵌入生成的一个UnimplementedServiceServer
 }
 
 // Config 作为grpc的实现需要有配置方法实现
-func (s *service) Config() error{
+func (s *service) Config() error {
 	db, err := conf.C().MySQL.GetDB() //数据库配置从全局配置文档中获取
 	if err != nil {
 		return err
@@ -55,9 +54,7 @@ func (s *service) Registry(server grpc.Server) {
 	resouce.RegisterServiceServer(server.svr)
 }
 
-
-func init(){
+func init() {
 	app.RegistryGrpcApp(svr)
 
 }
-

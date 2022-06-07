@@ -21,8 +21,8 @@ message TagSelector {
   // @gotags: json:"key"
   string key = 1;
   // 匹配符
-  // @gotags: json:"opertor"
-  string opertor = 2;
+  // @gotags: json:"operator"
+  string operator = 2;
   // 匹配的值
   // @gotags: json:"values"
   repeated string values = 3;
