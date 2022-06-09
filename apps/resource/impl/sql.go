@@ -26,11 +26,11 @@ const (
 	//sqlQueryResource，联表查询，以左边的表为准进行查询
 	// resource_tag t 为别名
 	//join 需要条件使用on链接，通过t.resource_id 这个字段进行链接
-	//sqlQueryResource = `SELECT r.* FROM resource r %s JOIN resource_tag t ON r.id = t.resource_id`
+	sqlQueryResource = `SELECT r.* FROM resource r %s JOIN resource_tag t ON r.id = t.resource_id`
 
 	//使用count 会重复计数
 	//对字段去重使用DISTINCT，统计出当前资源查出来的个数
-	//用于分页使用
+	//用于分页使用获取总数
 	sqlCountResource = `SELECT COUNT(DISTINCT r.id) FROM resource r %s JOIN resource_tag t ON r.id = t.resource_id`
 
 	//sqlQueryResourceTag  = `SELECT t_key,t_value,description,resource_id,weight,type FROM resource_tag`

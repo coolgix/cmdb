@@ -1,9 +1,7 @@
 make --dry-run --always-make --keep-going --print-directory
-found packages impl (impl.go) and resource (resource.go) in /Users/yanghaipeng/Desktop/go/src/cmdb/apps/resource/impl
-
-make: Entering directory `/Users/yanghaipeng/Desktop/go/src/cmdb'
+make: Entering directory `/Users/yanghaipeng/go/src/github.com/coolgix/cmdb'
 go mod tidy
-go build -a -o dist/ -ldflags "-s -w" -ldflags "-X '""github.com/coolgix/cmdb"/version".GIT_BRANCH=master' -X '""github.com/coolgix/cmdb"/version".GIT_COMMIT=cc63dfc444a77dcc5679a21759935a2dd90f920e' -X '""github.com/coolgix/cmdb"/version".BUILD_TIME=2022-06-05 15:35:58' -X '""github.com/coolgix/cmdb"/version".GO_VERSION=go1.18.2 darwin/arm64'" 
  
-make: Leaving directory `/Users/yanghaipeng/Desktop/go/src/cmdb'
+go build -a -o dist/ -ldflags "-s -w" -ldflags "-X '""github.com/coolgix/cmdb"/version".GIT_BRANCH=master' -X '""github.com/coolgix/cmdb"/version".GIT_COMMIT=ecb57115b46ddc42f742886ed96b6efa5ffa4df3' -X '""github.com/coolgix/cmdb"/version".BUILD_TIME=2022-06-09 23:23:25' -X '""github.com/coolgix/cmdb"/version".GO_VERSION=go1.18.2 darwin/arm64'" 
+make: Leaving directory `/Users/yanghaipeng/go/src/github.com/coolgix/cmdb'
  

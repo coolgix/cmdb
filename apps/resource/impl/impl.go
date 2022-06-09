@@ -11,7 +11,6 @@ import (
 	"github.com/coolgix/cmdb/conf"
 
 	"github.com/infraboard/mcube/app"
-
 	"google.golang.org/grpc"
 )
 
@@ -50,8 +49,8 @@ func (s *service) Name() string {
 }
 
 // Registry 作为grpc的实现需要有服务的注册方法
-func (s *service) Registry(server grpc.Server) {
-	resouce.RegisterServiceServer(server.svr)
+func (s *service) Registry(server *grpc.Server) {
+	resource.RegisterServiceServer(server, svr)
 }
 
 func init() {

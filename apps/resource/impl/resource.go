@@ -3,10 +3,13 @@ package impl
 import (
 	"context"
 	"fmt"
+	"github.com/coolgix/cmdb/apps/resource"
 	"strings"
 
-	"github.com/coolgix/cmdb/apps/resource"
+	"github.com/infraboard/mcube/exception"
 	"github.com/infraboard/mcube/sqlbuilder"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func (s *service) Search(ctx context.Context, req *resource.SearchRequest) (
@@ -32,16 +35,59 @@ func (s *service) Search(ctx context.Context, req *resource.SearchRequest) (
 	set := resource.NewResourceSet()
 
 	//获取total select count(*) FROMT t where ....
-	countSQL, args := builderCountWith("COUNT(DISTINCT r.id)")
+	countSQL, args := BuildFromNewBase(fmt.Sprintf(sqlCountResource, join))
 	countStmt, err := s.db.Prepare(countSQL)
 	if err != nil {
 		s.log.Debugf("count sql,%s,%v", countSQL, args)
 		return nil, exception.NewInternalServerError("prepare count sql erro, %s", err)
 	}
+
 	defer countStmt.Close()
 	err = countStmt.QueryRow(args...).Scan(&set.Total)
+	if err != nil {
+		return nil, exception.NewInternalServerError("scan count value error,%s", err)
 
-	return set, nil
+	}
+
+	// =========
+	// 查询分页数据
+	// =========
+
+	// tag查询时，以tag时间排序, 如果没有Tag就以资源的创建时间为key进行排序
+	//通常使用最近添加的资源放到我们的最前面
+	// 比如你添加资源, 最后添加的资源，最先被看到, 就是一个书堆, Stack
+	if req.Hastag() {
+		builder.Order("t.create_at").Desc()
+
+	} else {
+		builder.Order("r.create_at").Desc()
+	}
+
+	//获取分页数据
+	querySQL, args := builder.
+		// GroupBy 将相同的数据去掉
+		GroupBy("r.id").
+		//分页条件
+		//进行一个聚合。ComputeOffset于uint
+		Limit(req.Page.ComputeOffset(), uint(req.Page.PageSize)).
+		//构建分页查询
+		BuildQuery()
+	s.log.Debugf("sql: %s, args: %v", querySQL, args)
+
+	//crud逻辑
+	queryStmt, err := s.db.PrepareContext(ctx, querySQL)
+	if err != nil {
+		return nil, exception.NewInternalServerError("prepare query resource error, %s", err.Error())
+	}
+	defer queryStmt.Close()
+
+	rows, err := queryStmt.QueryContext(ctx, args...)
+	if err != nil {
+		return nil, exception.NewInternalServerError(err.Error())
+	}
+	defer rows.Close()
+
+	return nil, nil
 }
 func (s *service) buildQuery(builder *sqlbuilder.Builder, req *resource.SearchRequest) {
 	// 构建过滤条件
@@ -51,7 +97,8 @@ func (s *service) buildQuery(builder *sqlbuilder.Builder, req *resource.SearchRe
 		if req.ExactMatch {
 			//补充sql语句的条件
 			//精确匹配
-			builder.Where("r.name = ? OR r.id = ? OR r.private_ip = ? OR r.public_ip = ?",
+			builder.Where("r.name = ?	"+
+				"+ OR r.id = ? OR r.private_ip = ? OR r.public_ip = ?",
 				req.Keywords,
 				req.Keywords,
 				req.Keywords,
@@ -113,7 +160,7 @@ func (s *service) buildQuery(builder *sqlbuilder.Builder, req *resource.SearchRe
 		// like 默认是匹配所有，所以我们就把* 替换为%
 		//.* 转为%号的操作
 		//tag_key="xxxx", .* ,定制key如何统配
-		query.Where("t.t_key LIKE ?", strings.ReplaceAll(selector.Key, ".*", "%"))
+		builder.Where("t.t_key LIKE ?", strings.ReplaceAll(selector.Key, ".*", "%"))
 
 		//场景1：添加value过滤条件
 		//定制value如何统配,app=["app1","app2","app3"] 或的关系，

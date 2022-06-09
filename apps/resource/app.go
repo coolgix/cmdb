@@ -1,5 +1,7 @@
 package resource
 
+import _ "github.com/infraboard/mcube/http/request"
+
 const (
 	AppName = "resource"
 )
@@ -24,7 +26,6 @@ const (
 //判断下长度是不是大于0，如果大于0就可以做过滤，如果等于0就没有tag
 func (r *SearchRequest) HasTag() bool {
 	return len(r.Tags) > 0
-
 }
 
 //围绕Operator 需要扩展Tagselectot

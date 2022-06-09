@@ -7,10 +7,8 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 
 # This program built for i386-apple-darwin11.3.0
  
-found packages impl (impl.go) and resource (resource.go) in /Users/yanghaipeng/Desktop/go/src/cmdb/apps/resource/impl
 
-
-# Make data base, printed on Sun Jun  5 15:35:59 2022
+# Make data base, printed on Thu Jun  9 23:23:26 2022
 
 # Variables
 
@@ -27,7 +25,7 @@ VSCODE_LOG_NATIVE = false
 # automatic
 @F = $(notdir $@)
 # makefile
-CURDIR := /Users/yanghaipeng/Desktop/go/src/cmdb
+CURDIR := /Users/yanghaipeng/go/src/github.com/coolgix/cmdb
 # makefile
 SHELL = /bin/sh
 # makefile (from `Makefile', line 6)
@@ -51,9 +49,9 @@ INFOPATH = /opt/homebrew/share/info:
 # makefile (from `Makefile', line 11)
 MCUBE_VERSION := v1.8.13
 # makefile (from `Makefile', line 15)
-BUILD_COMMIT := cc63dfc444a77dcc5679a21759935a2dd90f920e
+BUILD_COMMIT := ecb57115b46ddc42f742886ed96b6efa5ffa4df3
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/4x/r01f3jzx2q39025s6f75srrc0000gn/T/vscode-ipc-8b0ef96d-c976-45cc-b405-f392caa9f21c.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/4x/r01f3jzx2q39025s6f75srrc0000gn/T/vscode-ipc-9e7da396-1384-4e50-a8f1-2e0737c8d013.sock
 # environment
 VSCODE_CWD = /
 # environment
@@ -65,7 +63,7 @@ LSCOLORS = Gxfxcxdxbxegedabagacad
 # environment
 GOPATH = /Users/yanghaipeng/go
 # makefile (from `Makefile', line 7)
-PKG_LIST := 
+PKG_LIST := github.com/coolgix/cmdb github.com/coolgix/cmdb/apps/all github.com/coolgix/cmdb/apps/book github.com/coolgix/cmdb/apps/book/api github.com/coolgix/cmdb/apps/book/impl github.com/coolgix/cmdb/apps/resource github.com/coolgix/cmdb/apps/resource/impl github.com/coolgix/cmdb/client github.com/coolgix/cmdb/cmd github.com/coolgix/cmdb/conf github.com/coolgix/cmdb/protocol github.com/coolgix/cmdb/swagger github.com/coolgix/cmdb/version
 # environment
 VSCODE_LOG_STACK = false
 # environment
@@ -81,7 +79,7 @@ SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.VLa3MMxwbT/Listeners
 # environment
 VSCODE_PIPE_LOGGING = true
 # environment
-PWD = /Users/yanghaipeng/Desktop/go/src/cmdb
+PWD = /Users/yanghaipeng/go/src/github.com/coolgix/cmdb
 # makefile (from `Makefile', line 18)
 VERSION_PATH := ""github.com/coolgix/cmdb"/version"
 # environment
@@ -143,7 +141,7 @@ TMPDIR = /var/folders/4x/r01f3jzx2q39025s6f75srrc0000gn/T/
 # environment
 VSCODE_IPC_HOOK = /Users/yanghaipeng/Library/Application Support/Code/1.67.2-main.sock
 # makefile (from `Makefile', line 16)
-BUILD_TIME := 2022-06-05 15:35:59
+BUILD_TIME := 2022-06-09 23:23:26
 # makefile
 MAKEFLAGS = Rrqp
 # environment
@@ -187,7 +185,7 @@ SUFFIXES :=
 # default
 .INCLUDE_DIRS = /usr/local/include
 # makefile (from `Makefile', line 8)
-GO_FILES := ./cmd/start.go ./cmd/init.go ./cmd/root.go ./swagger/docs.go ./protocol/grpc.go ./protocol/http.go ./version/version.go ./conf/log.go ./conf/config.go ./conf/load.go ./apps/all/internal.go ./apps/all/api.go ./apps/all/impl.go ./apps/book/impl/book.go ./apps/book/impl/dao.go ./apps/book/impl/impl.go ./apps/book/impl/sql.go ./apps/book/book.pb.go ./apps/book/book_grpc.pb.go ./apps/book/app.go ./apps/book/api/book.go ./apps/book/api/http.go ./apps/resource/impl/resource.go ./apps/resource/impl/impl.go ./apps/resource/resource_grpc.pb.go ./apps/resource/app.go ./apps/resource/resource.pb.go ./apps/resource/resource_enum.pb.go ./client/config.go ./client/client.go ./main.go
+GO_FILES := ./cmd/start.go ./cmd/init.go ./cmd/root.go ./swagger/docs.go ./protocol/grpc.go ./protocol/http.go ./version/version.go ./conf/log.go ./conf/config.go ./conf/load.go ./apps/all/internal.go ./apps/all/api.go ./apps/all/impl.go ./apps/book/impl/book.go ./apps/book/impl/dao.go ./apps/book/impl/impl.go ./apps/book/impl/sql.go ./apps/book/book.pb.go ./apps/book/book_grpc.pb.go ./apps/book/app.go ./apps/book/api/book.go ./apps/book/api/http.go ./apps/resource/impl/resource.go ./apps/resource/impl/impl.go ./apps/resource/impl/sql.go ./apps/resource/resource_grpc.pb.go ./apps/resource/app.go ./apps/resource/resource.pb.go ./apps/resource/resource_enum.pb.go ./client/config.go ./client/client.go ./main.go
 # environment
 MAKELEVEL := 0
 # environment
@@ -195,7 +193,7 @@ LANG = C
 # makefile (from `Makefile', line 14)
 BUILD_BRANCH := master
 # environment
-VSCODE_PID = 73432
+VSCODE_PID = 54584
 # variable set hash-table stats:
 # Load=91/1024=9%, Rehash=0, Collisions=2/139=1%
 
@@ -250,6 +248,7 @@ test-coverage:
 Makefile:
 #  Implicit rule search has been done.
 #  Last modified 2022-05-29 18:21:16
+ 
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -268,7 +267,6 @@ gen:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
- 
 #  commands to execute (from `Makefile', line 68):
 	@protoc -I=. -I=common/pb --go_out=. --go_opt=module=${PKG} --go-grpc_out=. --go-grpc_opt=module=${PKG} apps/*/pb/*.proto
 	@go fmt ./...
@@ -417,6 +415,6 @@ install:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Sun Jun  5 15:35:59 2022
+# Finished Make data base on Thu Jun  9 23:23:26 2022
 
  
