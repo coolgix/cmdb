@@ -47,3 +47,9 @@ func (s *TagSelector) Relationship() string {
 	}
 
 }
+
+func NewResourceSet() *ResourceSet {
+	return &ResourceSet{
+		Items: []*Resource{},
+	}
+}

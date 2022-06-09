@@ -21,12 +21,28 @@ func (s *service) Search(ctx context.Context, req *resource.SearchRequest) (
 		join = "RIGHT"
 	}
 
+	// 构建过滤条件
 	//构建sql具体使用那种方法
 	builder := sqlbuilder.NewQuery(fmt.Sprintf(sqlQueryResource, join))
 	s.buildQuery(builder, req)
-	return nil, nil
-}
 
+	// =========
+	// 计数统计: COUNT语句
+	// =========
+	set := resource.NewResourceSet()
+
+	//获取total select count(*) FROMT t where ....
+	countSQL, args := builderCountWith("COUNT(DISTINCT r.id)")
+	countStmt, err := s.db.Prepare(countSQL)
+	if err != nil {
+		s.log.Debugf("count sql,%s,%v", countSQL, args)
+		return nil, exception.NewInternalServerError("prepare count sql erro, %s", err)
+	}
+	defer countStmt.Close()
+	err = countStmt.QueryRow(args...).Scan(&set.Total)
+
+	return set, nil
+}
 func (s *service) buildQuery(builder *sqlbuilder.Builder, req *resource.SearchRequest) {
 	// 构建过滤条件
 	//关键字语句，动态过滤参数
@@ -110,15 +126,29 @@ func (s *service) buildQuery(builder *sqlbuilder.Builder, req *resource.SearchRe
 
 		//tag_value LIKe ? or tag_value LIKe ?
 		var condtions []string
+		var args []any
 		for _, v := range selector.Values {
 			//=,!=,=~,!~ 四种操作的统配
 			//t.t_value [=,!=,=~,!~] value //这样一种表达式
+			//where 条件语句
 			condtions = append(condtions, fmt.Sprintf("t.t_value % ?", selector.Operator))
+			//条件参数args
+			args = append(args, string.ReplaceAll(v, ".*", "%"))
+
+			//args=append(args,v) 这种也没有有问题，上面的写法是吧tag_value .* 变为 % 占位符 做的特殊处理，为了匹配正则里面的
+			//.* 专门做的处理 如果app=product1.*匹配出来，就可以用%代替.%,
+			//使用原声sql写是这样的app=product1.% ，用户传递不可能用%传递
 
 		}
+		//如果tag的value是有condtions多个条件做成的
+		//app=~app1,app2, 根据符号来决定我们这个value之间的关系
+		if len(condtions) > 0 {
+			vmwhere := fmt.Sprintf("(%s)", strings.Join(condtions, selector.RelationShip()))
+			builder.where(vmwhere, args...)
+		}
 	}
-
 }
+
 func (s *service) QueryTag(ctx context.Context, req *resource.QueryTagRequest) (
 	*resource.TagSet, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryTag not implemented")
