@@ -20,7 +20,7 @@ func (s *service) Search(ctx context.Context, req *resource.SearchRequest) (
 	//需要判断请求有没有传tag的条件给我们
 
 	join := "LEFT"
-	if req.Hastag() {
+	if req.HasTag() {
 		join = "RIGHT"
 	}
 
@@ -35,7 +35,7 @@ func (s *service) Search(ctx context.Context, req *resource.SearchRequest) (
 	set := resource.NewResourceSet()
 
 	//获取total select count(*) FROMT t where ....
-	countSQL, args := BuildFromNewBase(fmt.Sprintf(sqlCountResource, join))
+	countSQL, args := builder.BuildFromNewBase(fmt.Sprintf(sqlCountResource, join))
 	countStmt, err := s.db.Prepare(countSQL)
 	if err != nil {
 		s.log.Debugf("count sql,%s,%v", countSQL, args)
@@ -56,7 +56,7 @@ func (s *service) Search(ctx context.Context, req *resource.SearchRequest) (
 	// tag查询时，以tag时间排序, 如果没有Tag就以资源的创建时间为key进行排序
 	//通常使用最近添加的资源放到我们的最前面
 	// 比如你添加资源, 最后添加的资源，最先被看到, 就是一个书堆, Stack
-	if req.Hastag() {
+	if req.HasTag() {
 		builder.Order("t.create_at").Desc()
 
 	} else {
@@ -180,7 +180,7 @@ func (s *service) buildQuery(builder *sqlbuilder.Builder, req *resource.SearchRe
 			//where 条件语句
 			condtions = append(condtions, fmt.Sprintf("t.t_value % ?", selector.Operator))
 			//条件参数args
-			args = append(args, string.ReplaceAll(v, ".*", "%"))
+			args = append(args, strings.ReplaceAll(v, ".*", "%"))
 
 			//args=append(args,v) 这种也没有有问题，上面的写法是吧tag_value .* 变为 % 占位符 做的特殊处理，为了匹配正则里面的
 			//.* 专门做的处理 如果app=product1.*匹配出来，就可以用%代替.%,
@@ -190,8 +190,8 @@ func (s *service) buildQuery(builder *sqlbuilder.Builder, req *resource.SearchRe
 		//如果tag的value是有condtions多个条件做成的
 		//app=~app1,app2, 根据符号来决定我们这个value之间的关系
 		if len(condtions) > 0 {
-			vmwhere := fmt.Sprintf("(%s)", strings.Join(condtions, selector.RelationShip()))
-			builder.where(vmwhere, args...)
+			vmwhere := fmt.Sprintf("(%s)", strings.Join(condtions, selector.Relationship()))
+			builder.Where(vmwhere, args...)
 		}
 	}
 }

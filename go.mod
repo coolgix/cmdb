@@ -11,14 +11,17 @@ require (
 	github.com/go-openapi/spec v0.20.6
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/imdario/mergo v0.3.13
-	github.com/infraboard/keyauth v0.7.9
-	github.com/infraboard/mcube v1.8.13
+	github.com/imdario/mergo v0.3.12
+	github.com/infraboard/keyauth v0.7.8
+	github.com/infraboard/mcube v1.8.8
 	github.com/rs/xid v1.4.0
 	github.com/spf13/cobra v1.4.0
 	github.com/stretchr/testify v1.7.1
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.403
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.403
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.0.403
 	google.golang.org/grpc v1.46.2
-	google.golang.org/protobuf v1.28.0
+	google.golang.org/protobuf v1.27.1
 )
 
 require (
@@ -56,5 +59,5 @@ require (
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
