@@ -1,6 +1,9 @@
 package resource
 
-import _ "github.com/infraboard/mcube/http/request"
+import (
+	_ "github.com/infraboard/mcube/http/request"
+	"strings"
+)
 
 const (
 	AppName = "resource"
@@ -52,5 +55,63 @@ func (s *TagSelector) Relationship() string {
 func NewResourceSet() *ResourceSet {
 	return &ResourceSet{
 		Items: []*Resource{},
+	}
+}
+
+//add逻辑就是
+func (s *ResourceSet) Add(item *Resource) {
+	//加入到items列表里面
+	s.Items = append(s.Items, item)
+}
+
+func NewDefaultResource() *Resource {
+	return &Resource{
+		Base:        &Base{},
+		Information: &Information{},
+	}
+}
+
+//从数据库取得数据需要进行格式化
+//独立绑定一个方法单独处理这个逻辑
+func (i *Information) LoadPrivateIPString(s string) {
+	if s != "" {
+		//按照逗号分割出PrivateIp，PrivateIp是一个ip地址的列表
+		i.PrivateIp = strings.Split(s, ",")
+	}
+}
+
+func (i *Information) LoadPublicIPString(s string) {
+	if s != "" {
+		//PublicIp 也是一个ip地址的列表
+		i.PublicIp = strings.Split(s, ",")
+	}
+}
+
+func NewDefaultTag() *Tag {
+	return &Tag{
+		Type:   TagType_USER,
+		Weight: 1,
+	}
+}
+
+func (s *ResourceSet) ResourceIds() (ids []string) {
+	for i := range s.Items {
+		ids = append(ids, s.Items[i].Base.Id)
+	}
+
+	return
+}
+
+func (r *Information) AddTag(t *Tag) {
+	r.Tags = append(r.Tags, t)
+}
+
+func (s *ResourceSet) UpdateTag(tags []*Tag) {
+	for i := range tags {
+		for j := range s.Items {
+			if s.Items[j].Base.Id == tags[i].ResourceId {
+				s.Items[j].Information.AddTag(tags[i])
+			}
+		}
 	}
 }

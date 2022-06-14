@@ -33,7 +33,7 @@ const (
 	//用于分页使用获取总数
 	sqlCountResource = `SELECT COUNT(DISTINCT r.id) FROM resource r %s JOIN resource_tag t ON r.id = t.resource_id`
 
-	//sqlQueryResourceTag  = `SELECT t_key,t_value,description,resource_id,weight,type FROM resource_tag`
+	sqlQueryResourceTag = `SELECT t_key,t_value,description,resource_id,weight,type FROM resource_tag`
 	//sqlDeleteResourceTag = `
 	//	DELETE
 	//	FROM

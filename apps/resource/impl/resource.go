@@ -68,7 +68,7 @@ func (s *service) Search(ctx context.Context, req *resource.SearchRequest) (
 		// GroupBy 将相同的数据去掉
 		GroupBy("r.id").
 		//分页条件
-		//进行一个聚合。ComputeOffset于uint
+		//以goroup进行一个聚合。ComputeOffset于uint
 		Limit(req.Page.ComputeOffset(), uint(req.Page.PageSize)).
 		//构建分页查询
 		BuildQuery()
@@ -86,8 +86,52 @@ func (s *service) Search(ctx context.Context, req *resource.SearchRequest) (
 		return nil, exception.NewInternalServerError(err.Error())
 	}
 	defer rows.Close()
+	var (
+		publicIPList, privateIPList string
+	)
 
-	return nil, nil
+	//从数据库读取的数据
+	for rows.Next() {
+		ins := resource.NewDefaultResource()
+		base := ins.Base
+		info := ins.Information
+		err := rows.Scan(
+			&base.Id, &base.ResourceType, &base.Vendor, &base.Region, &base.Zone, &base.CreateAt, &info.ExpireAt,
+			&info.Category, &info.Type, &info.Name, &info.Description,
+			&info.Status, &info.UpdateAt, &base.SyncAt, &info.SyncAccount,
+			&publicIPList, &privateIPList, &info.PayType, &base.DescribeHash, &base.ResourceHash,
+			&base.SecretId, &base.Domain, &base.Namespace, &base.Env, &base.UsageMode,
+		)
+		if err != nil {
+			return nil, exception.NewInternalServerError("query resource error, %s", err.Error())
+		}
+		// 这里是存入数据库的是一个IP列表, 格式: 10.10.1.1,10.10.2.2,.....,
+		// 因此我们从数据库取出该数据, 对格式进行特殊处理
+		info.LoadPrivateIPString(privateIPList)
+		info.LoadPublicIPString(publicIPList)
+
+		//add逻辑
+		set.Add(ins)
+	}
+
+	// 补充资源的标签
+	//需要专门补充tag
+	// 为什么 不在上个SQL，直接把Tag查出来喃?
+	// 只能查询到我们匹配到的tag  app=app1 只有app=app1 这个标签
+	// 如果想要把这个资源的所有标签都一并查出来
+	if req.WithTags {
+		tags, err := QueryTag(ctx, s.db, set.ResourceIds())
+		if err != nil {
+			return nil, err
+		}
+		// 查询出这个set关联的所有Tag(resource_id)
+		// 对应resource的Tag更新到Resource 结构体
+		// 更新的逻辑: tag.resource_id == resource.id --> 添加到resource Tags属性里面
+		set.UpdateTag(tags)
+	}
+
+	//最后吧数据结构返回
+	return set, nil
 }
 func (s *service) buildQuery(builder *sqlbuilder.Builder, req *resource.SearchRequest) {
 	// 构建过滤条件
