@@ -1,7 +1,9 @@
 package resource
 
 import (
+	"github.com/infraboard/mcube/http/request"
 	_ "github.com/infraboard/mcube/http/request"
+	"net/http"
 	"strings"
 )
 
@@ -87,6 +89,8 @@ func (i *Information) LoadPublicIPString(s string) {
 	}
 }
 
+//NewDefaultTag 方法
+//默认给予的tag 是TagType_USER 用户自定义标签, 允许用户修改
 func NewDefaultTag() *Tag {
 	return &Tag{
 		Type:   TagType_USER,
@@ -94,6 +98,10 @@ func NewDefaultTag() *Tag {
 	}
 }
 
+// ResourceIds 方法
+//把item里面的所有id取出，放到ids []string 数组里面去返回
+// 把属性里面的id取出来转换为string的一个操作
+//循环到append到一个数组里面
 func (s *ResourceSet) ResourceIds() (ids []string) {
 	for i := range s.Items {
 		ids = append(ids, s.Items[i].Base.Id)
@@ -102,10 +110,10 @@ func (s *ResourceSet) ResourceIds() (ids []string) {
 	return
 }
 
-func (r *Information) AddTag(t *Tag) {
-	r.Tags = append(r.Tags, t)
-}
-
+//UpdateTag 是一个循环
+//先循环所有的tag 把tag里面的 ResourceId 跟我们的列表里面的item里面的id相等
+//我们就把这个tag添加到information里面Tag 字段里面
+//所以我们的information 需要添加一个addtag的功能
 func (s *ResourceSet) UpdateTag(tags []*Tag) {
 	for i := range tags {
 		for j := range s.Items {
@@ -114,4 +122,56 @@ func (s *ResourceSet) UpdateTag(tags []*Tag) {
 			}
 		}
 	}
+}
+
+// 把tag添加到information的哪个字段上面
+func (r *Information) AddTag(t *Tag) {
+	r.Tags = append(r.Tags, t)
+}
+
+// keywords=xx&domain=xx&tag=app=~app1,app2,app3
+func NewSearchRequestFromHTTP(r *http.Request) (*SearchRequest, error) {
+	qs := r.URL.Query()
+	req := &SearchRequest{
+		Page:        request.NewPageRequestFromHTTP(r),
+		Keywords:    qs.Get("keywords"),
+		ExactMatch:  qs.Get("exact_match") == "true",
+		Domain:      qs.Get("domain"),
+		Namespace:   qs.Get("namespace"),
+		Env:         qs.Get("env"),
+		Status:      qs.Get("status"),
+		SyncAccount: qs.Get("sync_account"),
+		WithTags:    qs.Get("with_tags") == "true",
+		Tags:        []*TagSelector{},
+	}
+
+	umStr := qs.Get("usage_mode")
+	if umStr != "" {
+		mode, err := ParseUsageModeFromString(umStr)
+		if err != nil {
+			return nil, err
+		}
+		req.UsageMode = &mode
+	}
+
+	rtStr := qs.Get("resource_type")
+	if rtStr != "" {
+		rt, err := ParseTypeFromString(rtStr)
+		if err != nil {
+			return nil, err
+		}
+		req.Type = &rt
+	}
+
+	// 单独处理Tag参数 app~=app1,app2,app3 --> TagSelector ---> req
+	tgStr := qs.Get("tag")
+	if tgStr != "" {
+		tg, err := NewTagsFromString(tgStr)
+		if err != nil {
+			return nil, err
+		}
+		req.AddTag(tg...)
+	}
+
+	return req, nil
 }

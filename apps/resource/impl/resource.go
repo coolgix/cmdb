@@ -117,15 +117,25 @@ func (s *service) Search(ctx context.Context, req *resource.SearchRequest) (
 	// 补充资源的标签
 	//需要专门补充tag
 	// 为什么 不在上个SQL，直接把Tag查出来喃?
-	// 只能查询到我们匹配到的tag  app=app1 只有app=app1 这个标签
+	// select r."t." from left join resource_tag t on r.id=t.resource_id where t.t_key='%' and t.t_value='%';
+	// 只能查询到我们匹配到的tag  如果用户带了一个app=app1 只有app=app1 这个标签，其他的标签获取不到
+	// 你where语句的话只破配了t.t_key='%' 这一个标签，其他的标签不会被取到
 	// 如果想要把这个资源的所有标签都一并查出来
+	//最好单独通过资源的纬度去筛选资源所有的标签
+	// 所以我们加了一个withtags来进行标签的获取
 	if req.WithTags {
+		//单独分装一个querytag的函数，从我们的tag表里面根据ResourceIds，
+		//根据sql里面的sqlQueryResourceTag，把所有tag表的信息查询出来
+		//如何把我们当前set里面的ResourceId 取出。专门分装了一个方法
+		//这些都是针对那个 resourceid 的tag
+		//所以我们需要这些跟新到我们的set里面。需要apply到每一个resource.id里面
 		tags, err := QueryTag(ctx, s.db, set.ResourceIds())
 		if err != nil {
 			return nil, err
 		}
 		// 查询出这个set关联的所有Tag(resource_id)
-		// 对应resource的Tag更新到Resource 结构体
+		// 把对应resource的Tag更新到Resource 结构体上面
+		//根据tag里面的resource_id等于set里面的每一个resource.id，只要id相同，把tag添加到Resource 的 tag属性里面
 		// 更新的逻辑: tag.resource_id == resource.id --> 添加到resource Tags属性里面
 		set.UpdateTag(tags)
 	}
