@@ -1,6 +1,7 @@
 package resource
 
 import (
+	"fmt"
 	"github.com/infraboard/mcube/http/request"
 	_ "github.com/infraboard/mcube/http/request"
 	"net/http"
@@ -133,6 +134,7 @@ func (r *Information) AddTag(t *Tag) {
 func NewSearchRequestFromHTTP(r *http.Request) (*SearchRequest, error) {
 	qs := r.URL.Query()
 	req := &SearchRequest{
+		//痛殴request直接new 从http的参数中new出一个对象
 		Page:        request.NewPageRequestFromHTTP(r),
 		Keywords:    qs.Get("keywords"),
 		ExactMatch:  qs.Get("exact_match") == "true",
@@ -174,4 +176,88 @@ func NewSearchRequestFromHTTP(r *http.Request) (*SearchRequest, error) {
 	}
 
 	return req, nil
+}
+
+//AddTag 添加tag 逻辑
+//扔到TagSelector 标签里面
+func (req *SearchRequest) AddTag(t ...*TagSelector) {
+	req.Tags = append(req.Tags, t...)
+}
+
+// key1=v1,v2,v3&key2=~v1,v2,v3
+//表示共同产生的一个标签
+func NewTagsFromString(tagStr string) (tags []*TagSelector, err error) {
+	if tagStr == "" {
+		return
+	}
+
+	//获取到这个tag 后使用&符号进行拆分
+	items := strings.Split(tagStr, "&")
+	for _, v := range items {
+		// key1=v1,v2,v3 --> TagSelector
+		//解析为TagSelector
+		t, err := ParExpr(v)
+		if err != nil {
+			return nil, err
+		}
+		//转为TagSelector
+		//key就是TagSelector的key，v1,v2就是tag里面的value数组
+		//需要对这个字符串的语法进行格式化，ParExpr 格式化的逻辑
+		tags = append(tags, t)
+	}
+
+	return
+}
+
+//ParExpr 格式化的逻辑，TagSelector字符串的语法
+
+func ParExpr(str string) (*TagSelector, error) {
+	var (
+		op = ""
+		kv = []string{}
+	)
+
+	// app=~v1,v2,v3
+	//如果符号里面包含～，那我们的操作就是转化为like
+	//app=~v1,v2,v3,就按照=~ 这个符号切为两部分app与v1的部分
+	if strings.Contains(str, Operator_LIKE_EQUAL) {
+		op = "LIKE"
+		//key=value的部分
+		kv = strings.Split(str, Operator_LIKE_EQUAL)
+		//如果不等通配符等value就是not like
+	} else if strings.Contains(str, Operator_NOT_LIKE_EQUAL) {
+		op = "NOT LIKE"
+		kv = strings.Split(str, Operator_NOT_LIKE_EQUAL)
+		//如果不等号
+	} else if strings.Contains(str, Operator_NOT_EQUAL) {
+		op = "!="
+		kv = strings.Split(str, Operator_NOT_EQUAL)
+		//如果等于号
+	} else if strings.Contains(str, Operator_EQUAL) {
+		op = "="
+		kv = strings.Split(str, Operator_EQUAL)
+	} else {
+		return nil, fmt.Errorf("no support operator [=, =~, !=, !~]")
+	}
+	//如果格式不是key=value格式就报错
+	if len(kv) != 2 {
+		return nil, fmt.Errorf("key,value format error, requred key=value")
+	}
+
+	//把第一个参数放到key里面。op参数赋值，value通过逗号切开扔到我们的value里面去
+	//value 切分
+	// v1,v2,v3 切开过后变为splite [v1,v2,v3]
+	selector := &TagSelector{
+		Key:      kv[0],
+		Operator: op,
+		Values:   []string{},
+	}
+
+	// 如果Value等于*表示只匹配key
+	//统配所有，我们就不加value的参数
+	if kv[1] != "*" {
+		selector.Values = strings.Split(kv[1], ",")
+	}
+
+	return selector, nil
 }

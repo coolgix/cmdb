@@ -7,8 +7,10 @@ import (
 )
 
 //暴露的handler
-
+//SearchResource resource有一套restful的接口
+//restful.Request，restful.Response
 func (h *handler) SearchResource(r *restful.Request, w *restful.Response) {
+	// NewSearchRequestFromHTTP 从http里面解析参数
 	req, err := resource.NewSearchRequestFromHTTP(r.Request)
 	if err != nil {
 		response.Failed(w.ResponseWriter, err)
