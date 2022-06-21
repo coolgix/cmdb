@@ -2,6 +2,7 @@ package resource
 
 import (
 	"fmt"
+	"github.com/coolgix/cmdb/utils"
 	"github.com/infraboard/mcube/http/request"
 	_ "github.com/infraboard/mcube/http/request"
 	"net/http"
@@ -260,4 +261,25 @@ func ParExpr(str string) (*TagSelector, error) {
 	}
 
 	return selector, nil
+}
+
+func (i *Information) Hash() string {
+	return utils.Hash(i)
+}
+
+func (i *Information) PrivateIPToString() string {
+	return strings.Join(i.PrivateIp, ",")
+}
+
+func (i *Information) PublicIPToString() string {
+	return strings.Join(i.PublicIp, ",")
+}
+
+func NewThirdTag(key, value string) *Tag {
+	return &Tag{
+		Type:   TagType_THIRD,
+		Key:    key,
+		Value:  value,
+		Weight: 1,
+	}
 }

@@ -33,6 +33,16 @@ const (
 	//用于分页使用获取总数
 	sqlCountResource = `SELECT COUNT(DISTINCT r.id) FROM resource r %s JOIN resource_tag t ON r.id = t.resource_id`
 
+	sqlDeleteResourceTag = `
+		DELETE 
+		FROM
+			resource_tag 
+		WHERE
+			resource_id =? 
+			AND t_key =? 
+			AND t_value =?;
+	`
+
 	//操作tag的sql
 	//通过resource_id，把resource_tag表里的tag查询出来
 	sqlQueryResourceTag = `SELECT t_key,t_value,description,resource_id,weight,type FROM resource_tag`
@@ -57,4 +67,15 @@ const (
 	//	IF
 	//		( type != 1,?, weight );
 	//`
+	sqlInsertOrUpdateResourceTag = `
+		INSERT INTO resource_tag ( type, t_key, t_value, description, resource_id, weight, create_at)
+		VALUES
+			( ?,?,?,?,?,?,? ) 
+			ON DUPLICATE KEY UPDATE description =
+		IF
+			( type != 1,?, description ),
+			weight =
+		IF
+			( type != 1,?, weight );
+	`
 )

@@ -1,27 +1,28 @@
 syntax = "proto3";
 package course.cmdb.host;
-option go_package="github/coolgix/cmdb/apps/host";
+option go_package="github.com/coolgix/cmdb/apps/host";
 
-
+import "apps/resource/pb/resource.proto";
 import "github.com/infraboard/mcube/pb/page/page.proto";
 import "github.com/infraboard/mcube/pb/request/request.proto";
 
-import "github.com/coolgix/cmdb/apps/resource";
 
 service Service {
   // 同步云商的主机资源
   rpc SyncHost(Host) returns(Host);
   // 查询本地同步后的主机资源列表
   rpc QueryHost(QueryHostRequest) returns(HostSet);
-  // 查询主机详情信息
+  // 查询主机详情信息,查询单个
   rpc DescribeHost(DescribeHostRequest) returns(Host);
   // 更新主机信息, 同步更新云商资源信息
   rpc UpdateHost(UpdateHostRequest) returns(Host);
   // 释放主机, 按计划释放后, 信息会保留一段时间
   rpc ReleaseHost(ReleaseHostRequest) returns(Host);
+
+
 }
 
-message Host {
+message Host{
   // 固有基础属性
   // @gotags: json:"base"
   resource.Base base = 1;
@@ -31,6 +32,7 @@ message Host {
   // 主机资源 固有的属性
   // @gotags: json:"describe"
   Describe describe = 3;
+
 }
 
 message Describe {
@@ -74,8 +76,7 @@ message Describe {
   // @gotags: json:"extra"
   map<string, string> extra = 13;
 }
-
-message QueryHostRequest {
+message QueryHostRequest{
   // 分页参数
   // @gotags: json:"page"
   infraboard.mcube.page.PageRequest page = 1;
@@ -84,7 +85,7 @@ message QueryHostRequest {
   string keywords = 2;
 }
 
-message HostSet {
+message HostSet{
   // @gotags: json:"total"
   int64 total = 1;
   // @gotags: json:"items"
@@ -101,7 +102,8 @@ message UpdateHostRequest {
   UpdateHostData update_host_data = 3;
 }
 
-message UpdateHostData {
+//一次updat需要update 两张表
+message UpdateHostData{
   // @gotags: json:"information"
   resource.Information information = 1;
   // @gotags: json:"describe"
@@ -112,6 +114,7 @@ enum DescribeBy {
   HOST_ID = 0;
 }
 
+
 message DescribeHostRequest {
   // @gotags: json:"describe_by"
   DescribeBy describe_by = 1;
@@ -119,6 +122,7 @@ message DescribeHostRequest {
   string value = 2;
 }
 
+//释放计划，资源释放
 message ReleaseHostRequest {
   // 主机Id
   // @gotags: json:"id" validate:"required"

@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS `resource_tag` (
                                               KEY `idx_resource_id` (`resource_id`) USING HASH
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COMMENT='资源标签';
 
+#host模块表
 CREATE TABLE IF NOT EXISTS `resource_host` (
                                                `resource_id` varchar(64)  NOT NULL COMMENT '关联的资源Id',
                                                `cpu` tinyint(4) NOT NULL COMMENT 'cpu核数',
