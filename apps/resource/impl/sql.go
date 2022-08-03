@@ -56,21 +56,18 @@ const (
 	//		AND t_key =?
 	//		AND t_value =?;
 	//`
-	//sqlInsertOrUpdateResourceTag = `
-	//	INSERT INTO resource_tag ( type, t_key, t_value, description, resource_id, weight, create_at)
-	//	VALUES
-	//		( ?,?,?,?,?,?,? )
-	//		ON DUPLICATE KEY UPDATE description =
-	//	IF
-	//		( type != 1,?, description ),
-	//		weight =
-	//	IF
-	//		( type != 1,?, weight );
-	//`
+
+	//同时包括insert和uodate 的逻辑
+	//如果存在第三方就不更新表
+	//更新description和weight是有条件的
+	//当type不等于1 的时候就使用传进来的值
+	//ON DUPLICATE KEY UPDATE description = 如果出现一个主键冲突报错的话，用on关键字 当产生了主键冲突我们就执行
+	//update操作 只更新description，这个update我们又不能完全update，需要根据具类型进行update
+	//resource的type类型不等于第三方就允许更新，
 	sqlInsertOrUpdateResourceTag = `
 		INSERT INTO resource_tag ( type, t_key, t_value, description, resource_id, weight, create_at)
 		VALUES
-			( ?,?,?,?,?,?,? ) 
+			( ?,?,?,?,?,?,? )
 			ON DUPLICATE KEY UPDATE description =
 		IF
 			( type != 1,?, description ),

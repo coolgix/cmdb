@@ -263,10 +263,14 @@ func ParExpr(str string) (*TagSelector, error) {
 	return selector, nil
 }
 
+//Information结构体的hash
+//作为一个方法，hash自己
 func (i *Information) Hash() string {
 	return utils.Hash(i)
 }
 
+//ip地址的转换逻辑
+//数组转为string，用逗号链接
 func (i *Information) PrivateIPToString() string {
 	return strings.Join(i.PrivateIp, ",")
 }

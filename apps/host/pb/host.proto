@@ -19,17 +19,20 @@ service Service {
   // 释放主机, 按计划释放后, 信息会保留一段时间
   rpc ReleaseHost(ReleaseHostRequest) returns(Host);
 
-
 }
 
 message Host{
-  // 固有基础属性
+  // 固有基础属性，保存在resource表里面
   // @gotags: json:"base"
   resource.Base base = 1;
-  // 非固有的基础属性
+  // 非固有的基础属性，保存在resource表里面
   // @gotags: json:"information"
   resource.Information information = 2;
-  // 主机资源 固有的属性
+
+  //前面两个部分已经在resource模块里面定义好了
+  //只需要定义describe信息
+
+  // 主机资源 固有的属性，host独有的信息保存在resource——host表里
   // @gotags: json:"describe"
   Describe describe = 3;
 

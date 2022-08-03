@@ -71,13 +71,13 @@ type Host struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	// 固有基础属性
+	// 固有基础属性，保存在resource表里面
 	// @gotags: json:"base"
 	Base *resource.Base `protobuf:"bytes,1,opt,name=base,proto3" json:"base"`
-	// 非固有的基础属性
+	// 非固有的基础属性，保存在resource表里面
 	// @gotags: json:"information"
 	Information *resource.Information `protobuf:"bytes,2,opt,name=information,proto3" json:"information"`
-	// 主机资源 固有的属性
+	// 主机资源 固有的属性，host独有的信息保存在resource——host表里
 	// @gotags: json:"describe"
 	Describe *Describe `protobuf:"bytes,3,opt,name=describe,proto3" json:"describe"`
 }

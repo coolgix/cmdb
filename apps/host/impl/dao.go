@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+//SyncAt是在保存到数据库补充的，补充了一个毫秒时间UnixMilli
+//
 func (s *service) save(ctx context.Context, h *host.Host) error {
 	if h.Base.SyncAt != 0 {
 		h.Base.SyncAt = time.Now().UnixMilli()
@@ -43,14 +45,15 @@ func (s *service) save(ctx context.Context, h *host.Host) error {
 		}
 	}()
 
-	// 生成描写信息的Hash，分别计算 Resource Inforamtion Hash和Descirbe(host独有属性)的Hash
-	// 有专门把一个对象--> bash库 ,没选择这种做
-	// 把对象--> json(string) --> hash(string)---> 对象
+	// 生成描写信息的Hash，分别计算 Resource Inforamtion的Hash和Descirbe(host表独有属性)的Hash
+	// 有专门把一个对象--> hash库 ,没选择这种做
+	// 把对象--> json(string) --> hash(string)---> 对象的hash
 	if err := h.GenHash(); err != nil {
 		return err
 	}
 
 	// 保存资源基础信息(公共信息)
+	// 保存在resource 表里面。
 	err = impl.SaveResource(ctx, tx, h.Base, h.Information)
 	if err != nil {
 		return err
@@ -81,7 +84,7 @@ func (s *service) update(ctx context.Context, ins *host.Host) error {
 		stmt *sql.Stmt
 		err  error
 	)
-
+	aa
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("start tx error, %s", err)
@@ -99,6 +102,8 @@ func (s *service) update(ctx context.Context, ins *host.Host) error {
 	}()
 
 	// 更新资源基本信息
+	// 开启一个事务根据这个值有没有变化，根据外层host.go,放在dao之前就需要判断值是否有变化
+	//Resource有变化就跟新resource 表
 	if ins.Base.ResourceHashChanged {
 		if err := impl.UpdateResource(ctx, tx, ins.Base, ins.Information); err != nil {
 			return err
@@ -108,6 +113,7 @@ func (s *service) update(ctx context.Context, ins *host.Host) error {
 	}
 
 	// 更新实例信息
+	// describe表有信息变化，就跟新resource-host表，提交commit
 	if ins.Base.DescribeHashChanged {
 		stmt, err = tx.PrepareContext(ctx, updateHostSQL)
 		if err != nil {
@@ -133,6 +139,8 @@ func (s *service) update(ctx context.Context, ins *host.Host) error {
 	return err
 }
 
+//删除逻辑也需要开启事务，应为要开启两张表
+//
 func (s *service) delete(ctx context.Context, req *host.ReleaseHostRequest) error {
 	var (
 		stmt *sql.Stmt
@@ -155,6 +163,7 @@ func (s *service) delete(ctx context.Context, req *host.ReleaseHostRequest) erro
 			tx.Rollback()
 			return
 		} else {
+			//没有报错就提交事务
 			if err := tx.Commit(); err != nil {
 				s.log.Errorf("commit error, %s", err)
 			}

@@ -33,14 +33,17 @@ func NewDefaultHost() *Host {
 	}
 }
 
+//把对象进行hash实现方法
 func (h *Host) GenHash() error {
 	// hash resource
+	//单独做一个工具hash
 	h.Base.ResourceHash = h.Information.Hash()
 	// hash describe
 	h.Base.DescribeHash = utils.Hash(h.Describe)
 	return nil
 }
 
+//入库就用，逗号链接
 func (d *Describe) KeyPairNameToString() string {
 	return strings.Join(d.KeyPairName, ",")
 }
@@ -49,6 +52,7 @@ func (d *Describe) SecurityGroupsToString() string {
 	return strings.Join(d.SecurityGroups, ",")
 }
 
+//加载就用逗号分开
 func (d *Describe) LoadKeyPairNameString(s string) {
 	if s != "" {
 		d.KeyPairName = strings.Split(s, ",")

@@ -1,6 +1,7 @@
 package impl
 
 const (
+	//在表里插入数据
 	insertHostSQL = `
 	INSERT INTO resource_host  (
 		resource_id,cpu,memory,gpu_amount,gpu_spec,os_type,os_name,
@@ -8,7 +9,7 @@ const (
 		internet_max_bandwidth_in,key_pair_name,security_groups
 	) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);
 	`
-
+	//根据resource_id跟新表里的数据
 	updateHostSQL = `
 	UPDATE resource_host  SET 
 		cpu=?,memory=?,gpu_amount=?,gpu_spec=?,os_type=?,os_name=?,
@@ -17,6 +18,7 @@ const (
 	WHERE resource_id = ?
 	`
 
+	//链接两张表查询
 	queryHostSQL = `
 	SELECT
 	r.*,
