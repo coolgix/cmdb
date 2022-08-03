@@ -84,7 +84,7 @@ func (s *service) update(ctx context.Context, ins *host.Host) error {
 		stmt *sql.Stmt
 		err  error
 	)
-	aa
+
 	tx, err := s.db.BeginTx(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("start tx error, %s", err)
